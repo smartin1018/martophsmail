@@ -1,12 +1,15 @@
 package com.rowlingsrealm.owlery;
 
+import com.rowlingsrealm.owlery.npc.TraitOwelry;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Owelry extends JavaPlugin {
+public class Owlery extends JavaPlugin {
 
     private static JavaPlugin plugin;
     private static Server server;
@@ -24,6 +27,8 @@ public class Owelry extends JavaPlugin {
             pluginManager.disablePlugin(this);
         }
 
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(TraitOwelry.class));
+
         centralManager = new CentralManager(plugin);
     }
 
@@ -35,5 +40,9 @@ public class Owelry extends JavaPlugin {
 
     public static CentralManager getCentralManager() {
         return centralManager;
+    }
+
+    public static JavaPlugin getPlugin() {
+        return plugin;
     }
 }

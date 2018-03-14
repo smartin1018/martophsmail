@@ -1,12 +1,13 @@
 package com.rowlingsrealm.owlery;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Lang {
 
-    private static HashMap<String, String> properties = new HashMap<>();
+    private static Map<String, String> properties = new HashMap<>();
 
-    public static HashMap<String, String> getProperties() {
+    public static Map<String, String> getProperties() {
         return properties;
     }
 
@@ -14,8 +15,10 @@ public class Lang {
         properties.put(key, property.replace("&", "§"));
     }
 
-    public static HashMap<String, String> getDefaults() {
+    public static Map<String, String> getDefaults() {
         properties.put("usage",  C.DRed + "Usage: /{COMMAND} {PARAMS}");
+        properties.put("no-message-pending", C.DRed + "No message to end!");
+        properties.put("enter-message", C.Green + "Sending message to: {PLAYER}. Enter message in chat. You may use multiple messages. Use /endmessage to continue.");
 
         return properties;
     }

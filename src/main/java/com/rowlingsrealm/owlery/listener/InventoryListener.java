@@ -1,6 +1,7 @@
 package com.rowlingsrealm.owlery.listener;
 
 import com.rowlingsrealm.owlery.SimpleListener;
+import com.rowlingsrealm.owlery.mail.MailItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,6 +16,7 @@ import java.util.List;
 public class InventoryListener extends SimpleListener {
 
     private static List<Player> mailViewers = new ArrayList<>();
+    private static List<Player> naming = new ArrayList<>();
 
     public InventoryListener(JavaPlugin plugin) {
         super(plugin, "Inventory Listener");
@@ -59,7 +61,7 @@ public class InventoryListener extends SimpleListener {
             player.closeInventory();
 
         if (event.getCurrentItem().getType() == Material.EMERALD) {
-            //TODO: New MailItem
+            new MailItem(player.getUniqueId());
         }
     }
 
@@ -67,7 +69,7 @@ public class InventoryListener extends SimpleListener {
     public void onClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
 
-        if (!mailViewers.contains(player))
+        if (mailViewers.contains(player))
             return;
 
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
@@ -76,4 +78,11 @@ public class InventoryListener extends SimpleListener {
             }, 2);
     }
 
+    public static List<Player> getMailViewers() {
+        return mailViewers;
+    }
+
+    public static void addMailViewer(Player player) {
+        mailViewers.add(player);
+    }
 }
