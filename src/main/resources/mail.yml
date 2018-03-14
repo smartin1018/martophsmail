@@ -1,0 +1,9 @@
+65778a9a-e3a1-4129-85e7-dc57a377515c:
+  mail:
+    0:
+      from: "11c56ecd-82e3-45c2-8d1d-b55b24303a24"
+      time: 1520994805197
+      contents:
+        items:
+          0:
+        message: "Hello World!"
