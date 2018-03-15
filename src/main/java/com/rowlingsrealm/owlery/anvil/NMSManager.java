@@ -14,27 +14,13 @@ import java.util.Map;
  */
 
 public class NMSManager {
+    public static final Map<Class<?>, Class<?>> CORRESPONDING_TYPES = new HashMap<>();
     private static NMSManager instance;
 
-    public static NMSManager get(){
-        if(instance == null)
+    public static NMSManager get() {
+        if (instance == null)
             instance = new NMSManager();
         return instance;
-    }
-
-    public static final Map<Class<?>, Class<?>> CORRESPONDING_TYPES = new HashMap<Class<?>, Class<?>>();
-
-    public Class<?> getPrimitiveType(Class<?> clazz) {
-        return CORRESPONDING_TYPES.containsKey(clazz) ? CORRESPONDING_TYPES
-                .get(clazz) : clazz;
-    }
-
-    public Class<?>[] toPrimitiveTypeArray(Class<?>[] classes) {
-        int a = classes != null ? classes.length : 0;
-        Class<?>[] types = new Class<?>[a];
-        for (int i = 0; i < a; i++)
-            types[i] = getPrimitiveType(classes[i]);
-        return types;
     }
 
     public static boolean equalsTypeArray(Class<?>[] a, Class<?>[] o) {
@@ -44,6 +30,36 @@ public class NMSManager {
             if (!a[i].equals(o[i]) && !a[i].isAssignableFrom(o[i]))
                 return false;
         return true;
+    }
+
+    public static boolean set(Object object, String fieldName, Object fieldValue) {
+        Class<?> clazz = object.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                field.set(object, fieldValue);
+                return true;
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }
+        return false;
+    }
+
+    public Class<?> getPrimitiveType(Class<?> clazz) {
+        return CORRESPONDING_TYPES
+                .getOrDefault(clazz, clazz);
+    }
+
+    public Class<?>[] toPrimitiveTypeArray(Class<?>[] classes) {
+        int a = classes != null ? classes.length : 0;
+        Class<?>[] types = new Class<?>[a];
+        for (int i = 0; i < a; i++)
+            types[i] = getPrimitiveType(classes[i]);
+        return types;
     }
 
     public Object getHandle(Object obj) {
@@ -74,7 +90,7 @@ public class NMSManager {
     }
 
     public Method getMethod(String name, Class<?> clazz,
-                             Class<?>... paramTypes) {
+                            Class<?>... paramTypes) {
         Class<?>[] t = toPrimitiveTypeArray(paramTypes);
         for (Method m : clazz.getMethods()) {
             Class<?>[] types = toPrimitiveTypeArray(m.getParameterTypes());
@@ -109,23 +125,6 @@ public class NMSManager {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public static boolean set(Object object, String fieldName, Object fieldValue) {
-        Class<?> clazz = object.getClass();
-        while (clazz != null) {
-            try {
-                Field field = clazz.getDeclaredField(fieldName);
-                field.setAccessible(true);
-                field.set(object, fieldValue);
-                return true;
-            } catch (NoSuchFieldException e) {
-                clazz = clazz.getSuperclass();
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-        }
-        return false;
     }
 
     public Object getPlayerField(Player player, String name) throws SecurityException, NoSuchMethodException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {

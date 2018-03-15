@@ -1,0 +1,5 @@
+main: com.rowlingsrealm.owlery.Owlery
+name: Owlery
+author: Martoph
+description: Mail delivery for Rowling's Realm
+depend: [Citizens]

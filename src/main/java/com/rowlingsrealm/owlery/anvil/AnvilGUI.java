@@ -2,6 +2,8 @@ package com.rowlingsrealm.owlery.anvil;
 
 import com.rowlingsrealm.owlery.Owlery;
 import com.rowlingsrealm.owlery.SimpleListener;
+import net.minecraft.server.v1_12_R1.Container;
+import net.minecraft.server.v1_12_R1.ContainerAnvil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -121,7 +123,6 @@ public class AnvilGUI extends SimpleListener {
 
         try {
             Object p = NMSManager.get().getHandle(player);
-
 
             Object container = ContainerAnvil.getConstructor(NMSManager.get().getNMSClass("PlayerInventory"), NMSManager.get().getNMSClass("World"), BlockPosition, EntityHuman).newInstance(NMSManager.get().getPlayerField(player, "inventory"), NMSManager.get().getPlayerField(player, "world"), BlockPosition.getConstructor(int.class, int.class, int.class).newInstance(0, 0, 0), p);
             NMSManager.get().getField(NMSManager.get().getNMSClass("Container"), "checkReachable").set(container, false);

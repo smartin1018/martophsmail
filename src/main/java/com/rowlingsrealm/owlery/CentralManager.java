@@ -1,6 +1,7 @@
 package com.rowlingsrealm.owlery;
 
 import com.rowlingsrealm.owlery.command.CommandManager;
+import com.rowlingsrealm.owlery.listener.InventoryListener;
 import com.rowlingsrealm.owlery.mail.MailManager;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,12 +18,14 @@ public class CentralManager extends SimpleListener {
     private Plugin plugin;
     private MailManager mailManager;
     private CommandManager commandManager;
+    private InventoryListener inventoryListener;
 
     public CentralManager(JavaPlugin plugin) {
         super(plugin, "Central Manager");
 
         mailManager = new MailManager(plugin);
         commandManager = new CommandManager(plugin);
+        inventoryListener = new InventoryListener(plugin);
 
         this.plugin = plugin;
 
@@ -30,15 +33,25 @@ public class CentralManager extends SimpleListener {
         initLang();
     }
 
-    public void initMail() {
-        File mailFile = new File(plugin.getDataFolder(), "mail.yml");
+    private void initMail() {
+        File mailFile = new File(plugin.getDataFolder(), "mail.json");
 
         if (!mailFile.exists()) {
-            plugin.saveResource("mail.yml", false);
+            plugin.saveResource("mail.json", false);
         }
+
+        readMail();
     }
 
-    public void initLang() {
+    public static void saveMail() {
+
+    }
+
+    private void readMail() {
+
+    }
+
+     private void initLang() {
         File lang = new File(plugin.getDataFolder(), "en_US.lang");
 
         if (!lang.exists()) {
@@ -84,5 +97,9 @@ public class CentralManager extends SimpleListener {
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public InventoryListener getInventoryListener() {
+        return inventoryListener;
     }
 }

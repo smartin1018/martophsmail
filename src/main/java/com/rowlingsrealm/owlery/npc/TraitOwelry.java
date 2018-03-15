@@ -16,7 +16,7 @@ public class TraitOwelry extends Trait {
         if (event.getNPC() != npc)
             return;
 
-        Owlery.getCentralManager().getMailManager().openOwelry(event.getClicker());
+        Owlery.getCentralManager().getMailManager().openOwlery(event.getClicker(), 0);
     }
 
     @Override
