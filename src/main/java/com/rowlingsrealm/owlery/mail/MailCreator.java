@@ -17,7 +17,7 @@ public class MailCreator {
     }
 
     public MailCreator(MailItem mailItem) {
-        this(mailItem.getSender(), mailItem.getReceiever());
+        this(mailItem.getSender(), mailItem.getReceiver());
     }
 
     public MailCreator(UUID sender, UUID receiver) {
@@ -28,7 +28,7 @@ public class MailCreator {
 
     public MailCreator parse(UUID uuid) {
         for (MailCreator creator : Owlery.getCentralManager().getMailManager().getCreators()) {
-            if (creator.getSender() == uuid)
+            if (creator.getSender().equals(uuid))
                 return creator;
         }
 
@@ -41,6 +41,10 @@ public class MailCreator {
 
     public UUID getSender() {
         return sender;
+    }
+
+    public UUID getReceiver() {
+        return receiver;
     }
 
     public void addMessage(String message) {

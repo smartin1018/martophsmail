@@ -1,88 +1,162 @@
 package com.rowlingsrealm.owlery;
 
-import com.rowlingsrealm.owlery.command.CommandManager;
+import com.rowlingsrealm.owlery.listener.InventoryListener;
+import com.rowlingsrealm.owlery.mail.MailItem;
 import com.rowlingsrealm.owlery.mail.MailManager;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Map;
-import java.util.Properties;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.*;
 
 public class CentralManager extends SimpleListener {
 
     private Plugin plugin;
     private MailManager mailManager;
-    private CommandManager commandManager;
+    private InventoryListener inventoryListener;
+    private File mailFile;
 
     public CentralManager(JavaPlugin plugin) {
         super(plugin, "Central Manager");
 
         mailManager = new MailManager(plugin);
-        commandManager = new CommandManager(plugin);
+        inventoryListener = new InventoryListener(plugin);
 
         this.plugin = plugin;
+        mailFile = new File(getPlugin().getDataFolder(), "mail.json");
 
         initMail();
         initLang();
     }
 
-    public void initMail() {
-        File mailFile = new File(plugin.getDataFolder(), "mail.yml");
+    private void initMail() {
+        File mailFile = new File(getPlugin().getDataFolder(), "mail.json");
 
         if (!mailFile.exists()) {
-            plugin.saveResource("mail.yml", false);
+            plugin.saveResource("mail.json", false);
         }
+
+        readMail();
     }
 
-    public void initLang() {
-        File lang = new File(plugin.getDataFolder(), "en_US.lang");
+    public void saveMail() {
+
+        HashMap<UUID, List<String>> map = new HashMap<>();
+
+        mailManager.getMessageMap().forEach((key, value) -> {
+            List<String> strings = new ArrayList<>();
+
+            value.forEach(mailItem -> strings.add(mailItem.getJson()));
+
+            if (strings.isEmpty())
+                return;
+
+            map.put(key, strings);
+
+        });
+
+        JSONObject jsonObject = new JSONObject(map);
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(mailFile))) {
+
+            bufferedWriter.write(jsonObject.toJSONString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readMail() {
+
+        StringBuilder json = new StringBuilder();
+
+        try (BufferedReader input = new BufferedReader(
+                new InputStreamReader(
+                        new FileInputStream(mailFile), Charset.forName("Cp1252")))) {
+
+            String line;
+            while ((line = input.readLine()) != null) {
+                json.append(line);
+            }
+
+        } catch (IOException io) {
+            io.printStackTrace();
+        }
+
+        try {
+            JSONObject jsonObject = (JSONObject) new JSONParser().parse(json.toString());
+
+            if (jsonObject == null)
+                return;
+
+            Iterator<String> keysItr = (Iterator<String>) jsonObject.keySet().iterator();
+            while (keysItr.hasNext()) {
+
+                String key = keysItr.next();
+                List<MailItem> mailItems = new ArrayList<>();
+
+                for (String string : (List<String>) jsonObject.get(key)) {
+                    MailItem mailItem = new MailItem(string, UUID.fromString(key));
+                    mailItems.add(mailItem);
+                }
+
+                getMailManager().getMessageMap().put(UUID.fromString(key), mailItems);
+            }
+
+        } catch (ParseException ignored) {
+        }
+
+    }
+
+    private void initLang() {
+        File lang = new File(getPlugin().getDataFolder(), "en_US.lang");
 
         if (!lang.exists()) {
             plugin.saveResource("en_US.lang", false);
         }
 
         Properties properties = new Properties();
-        OutputStream output = null;
 
-        try {
+        try (InputStreamReader input = new InputStreamReader(new FileInputStream(lang), Charset.forName("Cp1252"))) {
 
-            output = new FileOutputStream(lang);
+            properties.load(input);
 
-            for (Map.Entry<String, String> entry : Lang.getDefaults().entrySet()) {
-                if (!properties.containsKey(entry.getKey())) {
-                    properties.setProperty(entry.getKey(), entry.getValue());
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(lang, true))) {
+
+                int i = 0;
+                for (Map.Entry<String, String> entry : Lang.getDefaults().entrySet()) {
+                    if (!properties.containsKey(entry.getKey())) {
+                        bufferedWriter.write((i > 0 ? "\n" : "") + entry.getKey() + "=" + entry.getValue());
+                    }
+                    i++;
                 }
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-            for (Object o : properties.keySet()) {
+            properties.load(input);
+
+            for (Object o : properties.keySet())
                 Lang.setProperty((String) o, properties.getProperty((String) o));
-            }
-
-            properties.store(output, null);
 
         } catch (IOException io) {
             io.printStackTrace();
-        } finally {
-            if (output != null) {
-                try {
-                    output.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
         }
+
     }
 
     public MailManager getMailManager() {
         return mailManager;
     }
 
-    public CommandManager getCommandManager() {
-        return commandManager;
+    public InventoryListener getInventoryListener() {
+        return inventoryListener;
     }
 }

@@ -1,7 +1,7 @@
 package com.rowlingsrealm.owlery.npc;
 
 import com.rowlingsrealm.owlery.Owlery;
-import net.citizensnpcs.api.event.NPCClickEvent;
+import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.event.EventHandler;
 
@@ -12,11 +12,12 @@ public class TraitOwelry extends Trait {
     }
 
     @EventHandler
-    public void click(NPCClickEvent event) {
-        if (event.getNPC() != npc)
+    public void click(NPCRightClickEvent event) {
+
+        if (!event.getNPC().hasTrait(this.getClass()))
             return;
 
-        Owlery.getCentralManager().getMailManager().openOwelry(event.getClicker());
+        Owlery.getCentralManager().getMailManager().openOwlery(event.getClicker(), 0);
     }
 
     @Override
