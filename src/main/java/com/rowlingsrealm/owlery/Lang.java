@@ -26,7 +26,7 @@ public class Lang {
             put("cancelled-delivery", C.DRed + "Cancelled delivery.");
             put("message-entered", C.Green + "Added message: " + C.Yellow + "{MESSAGE}");
             put("mail-sent", C.Green + "Mail sent!");
-            put("date-format", "yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            put("date-format", "yyyy-MM-dd' @ 'HH:mm:ss");
             put("long-message", C.DRed + "Message too long!");
             put("full-inv", C.DRed + "Full inventory!");
             put("invalid-player", C.DRed + "Player is not online or doesn't exist.");
