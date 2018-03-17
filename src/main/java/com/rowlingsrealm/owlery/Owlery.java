@@ -3,7 +3,7 @@ package com.rowlingsrealm.owlery;
 import com.rowlingsrealm.owlery.command.CommandEndMessage;
 import com.rowlingsrealm.owlery.mail.MailCreator;
 import com.rowlingsrealm.owlery.mail.MailItem;
-import com.rowlingsrealm.owlery.npc.TraitOwelry;
+import com.rowlingsrealm.owlery.npc.TraitOwlery;
 import com.rowlingsrealm.owlery.util.UtilInv;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
@@ -55,7 +55,7 @@ public class Owlery extends JavaPlugin {
             pluginManager.disablePlugin(this);
         }
 
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(TraitOwelry.class).withName("Owlery"));
+        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(TraitOwlery.class).withName("Owlery"));
 
         getCommand("endmessage").setExecutor(new CommandEndMessage());
 

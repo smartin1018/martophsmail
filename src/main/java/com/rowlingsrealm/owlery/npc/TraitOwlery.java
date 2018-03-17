@@ -5,9 +5,9 @@ import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.event.EventHandler;
 
-public class TraitOwelry extends Trait {
+public class TraitOwlery extends Trait {
 
-    public TraitOwelry() {
+    public TraitOwlery() {
         super("Owlery");
     }
 
