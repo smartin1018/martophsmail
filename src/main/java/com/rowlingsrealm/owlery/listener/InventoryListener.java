@@ -232,6 +232,7 @@ public class InventoryListener extends SimpleListener {
                     event.setCancelled(true);
                 } else {
                     player.getInventory().remove(clicked);
+                    player.updateInventory();
                 }
             }
         }

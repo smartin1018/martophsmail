@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -58,6 +59,8 @@ public class Owlery extends JavaPlugin {
         CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(TraitOwlery.class).withName("Owlery"));
 
         getCommand("endmessage").setExecutor(new CommandEndMessage());
+
+        pluginManager.addPermission(new Permission("owlery.sendtoself"));
 
     }
 
@@ -111,5 +114,7 @@ public class Owlery extends JavaPlugin {
         getCentralManager().getInventoryListener().getInboxViewers().keySet().forEach(Player::closeInventory);
 
         getCentralManager().saveMail();
+
+        server.getPluginManager().removePermission("owlery.sendtoself");
     }
 }

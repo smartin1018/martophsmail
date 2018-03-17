@@ -39,6 +39,12 @@ public class MailItem {
         new AnvilGUI(Owlery.getPlugin(), Bukkit.getPlayer(sender), C.Gray + "Player name...", (player, reply) -> {
             Player player1 = Bukkit.getPlayer(reply);
 
+            if (reply.equals(player.getDisplayName()) && !player.hasPermission("owlery.sendtoself")) {
+                player.closeInventory();
+                player.sendMessage(Lang.getProperty("same-player"));
+                return "Same player";
+            }
+
             if (player1 == null) {
                 player.closeInventory();
                 player.sendMessage(Lang.getProperty("invalid-player"));

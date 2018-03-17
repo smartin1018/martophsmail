@@ -34,6 +34,7 @@ public class Lang {
             put("deleted", C.DRed + "Deleted.");
             put("no-message-to-end", C.DRed + "No message to end!");
             put("mail-received", C.Green + "Mail received from {PLAYER}!");
+            put("same-player", C.DRed + "Cannot send to yourself!");
         }};
     }
 
