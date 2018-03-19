@@ -44,8 +44,8 @@ public class CommandEndMessage implements CommandExecutor {
 
         player.openInventory(inventory);
 
-        Owlery.getCentralManager().getInventoryListener().getItemSenders().add(player);
-        Owlery.getCentralManager().getInventoryListener().getMailViewers().add(player);
+        Owlery.getCentralManager().getInventoryListener().getItemSenders().add(player.getUniqueId());
+        Owlery.getCentralManager().getInventoryListener().getMailViewers().add(player.getUniqueId());
         return true;
     }
 }

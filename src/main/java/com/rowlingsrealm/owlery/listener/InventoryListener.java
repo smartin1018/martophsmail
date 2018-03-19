@@ -22,9 +22,9 @@ import java.util.*;
 
 public class InventoryListener extends SimpleListener {
 
-    private HashMap<Player, Integer> inboxViewers = new HashMap<>();
-    private List<Player> mailViewers = new ArrayList<>();
-    private List<Player> itemSenders = new ArrayList<>();
+    private HashMap<UUID, Integer> inboxViewers = new HashMap<>();
+    private List<UUID> mailViewers = new ArrayList<>();
+    private List<UUID> itemSenders = new ArrayList<>();
     private List<MailItem> sureToDelete = new ArrayList<>();
 
     public InventoryListener(JavaPlugin plugin) {
@@ -32,18 +32,18 @@ public class InventoryListener extends SimpleListener {
     }
 
     public void addMailViewer(Player player, int page) {
-        inboxViewers.put(player, page);
+        inboxViewers.put(player.getUniqueId(), page);
     }
 
-    public List<Player> getItemSenders() {
+    public List<UUID> getItemSenders() {
         return itemSenders;
     }
 
-    public List<Player> getMailViewers() {
+    public List<UUID> getMailViewers() {
         return mailViewers;
     }
 
-    public HashMap<Player, Integer> getInboxViewers() {
+    public HashMap<UUID, Integer> getInboxViewers() {
         return inboxViewers;
     }
 
@@ -54,14 +54,14 @@ public class InventoryListener extends SimpleListener {
         Set<Integer> slots = event.getRawSlots();
 
         for (Integer slot : slots) {
-            if (inboxViewers.containsKey(event.getWhoClicked())) {
+            if (inboxViewers.containsKey(event.getWhoClicked().getUniqueId())) {
                 if (slot < event.getView().getTopInventory().getSize())
                     event.setCancelled(true);
             }
 
-            if (mailViewers.contains(event.getWhoClicked())) {
+            if (mailViewers.contains(event.getWhoClicked().getUniqueId())) {
 
-                if (!itemSenders.contains(event.getWhoClicked())) {
+                if (!itemSenders.contains(event.getWhoClicked().getUniqueId())) {
                     if (slot < event.getView().getTopInventory().getSize())
                         event.setCancelled(true);
                 }
@@ -87,7 +87,7 @@ public class InventoryListener extends SimpleListener {
         if (clicked == null)
             return;
 
-        if (inboxViewers.containsKey(player)) {
+        if (inboxViewers.containsKey(player.getUniqueId())) {
 
             if (event.getRawSlot() < event.getView().getTopInventory().getSize())
                 event.setCancelled(true);
@@ -121,26 +121,25 @@ public class InventoryListener extends SimpleListener {
 
                 mailItem.open(player);
                 mailItem.setRead(true);
-                mailViewers.add(player);
-                inboxViewers.remove(player);
+                mailViewers.add(player.getUniqueId());
+                inboxViewers.remove(player.getUniqueId());
             }
 
             if (clicked.getType() == Material.SIGN) {
                 if (clicked.getItemMeta().getDisplayName().equals(C.Green + "Previous Page")) {
-                    Owlery.getCentralManager().getMailManager().openOwlery(player, inboxViewers.get(player) - 1);
-                    Owlery.sendMessage(inboxViewers.get(player));
+                    Owlery.getCentralManager().getMailManager().openOwlery(player, inboxViewers.get(player.getUniqueId()) - 1);
+                    Owlery.sendMessage(inboxViewers.get(player.getUniqueId()));
                 }
 
                 if (clicked.getItemMeta().getDisplayName().equals(C.Green + "Next Page")) {
-                    Owlery.getCentralManager().getMailManager().openOwlery(player, inboxViewers.get(player) + 1);
-                    Owlery.sendMessage(inboxViewers.get(player));
+                    Owlery.getCentralManager().getMailManager().openOwlery(player, inboxViewers.get(player.getUniqueId()) + 1);
+                    Owlery.sendMessage(inboxViewers.get(player.getUniqueId()));
                 }
             }
         }
 
-        if (itemSenders.contains(player)) {
+        if (itemSenders.contains(player.getUniqueId())) {
             if (clicked.isSimilar(UtilInv.createItem(Material.EMERALD, C.Green + "Send Mail", new String[]{C.Gray + "Click me to send mail!"}, 1))) {
-                Bukkit.getScheduler().runTaskLater(getPlugin(), player::closeInventory, 1);
                 Inventory inventory = UtilInv.surroundInventory(event.getClickedInventory(), new ItemStack(Material.AIR));
                 ArrayList<ItemStack> items = new ArrayList<>(Arrays.asList(inventory.getContents()));
                 items.removeIf(Objects::isNull);
@@ -148,7 +147,7 @@ public class InventoryListener extends SimpleListener {
 
                 new MailItem(mailCreator.getSender(), mailCreator.getReceiver(), mailCreator.getMessageStreamline(), items);
 
-                itemSenders.remove(player);
+                itemSenders.remove(player.getUniqueId());
                 Owlery.getCentralManager().getMailManager().getCreators().remove(mailCreator);
                 Bukkit.getScheduler().runTaskLater(getPlugin(), player::closeInventory, 1);
                 player.sendMessage(Lang.getProperty("mail-sent"));
@@ -156,11 +155,11 @@ public class InventoryListener extends SimpleListener {
             }
         }
 
-        if (mailViewers.contains(player)) {
+        if (mailViewers.contains(player.getUniqueId())) {
             int slot = event.getRawSlot();
 
 
-            if (!itemSenders.contains(player)) {
+            if (!itemSenders.contains(player.getUniqueId())) {
 
                 InventoryAction action = event.getAction();
 
@@ -258,10 +257,10 @@ public class InventoryListener extends SimpleListener {
         Player player = (Player) event.getPlayer();
         Inventory inventory = event.getInventory();
 
-        if (inboxViewers.containsKey(player))
-            inboxViewers.remove(player);
+        if (inboxViewers.containsKey(player.getUniqueId()))
+            inboxViewers.remove(player.getUniqueId());
 
-        if (itemSenders.contains(player)) {
+        if (itemSenders.contains(player.getUniqueId())) {
 
             inventory = UtilInv.surroundInventory(inventory, new ItemStack(Material.AIR));
             ArrayList<ItemStack> items = new ArrayList<>(Arrays.asList(inventory.getContents()));
@@ -269,12 +268,12 @@ public class InventoryListener extends SimpleListener {
             items.forEach(itemStack -> UtilInv.attemptAddToInv(itemStack, player));
 
             Owlery.getCentralManager().getMailManager().getCreators().remove(new MailCreator().parse(player.getUniqueId()));
-            itemSenders.remove(player);
+            itemSenders.remove(player.getUniqueId());
             player.sendMessage(Lang.getProperty("cancelled-delivery"));
         }
 
-        if (mailViewers.contains(player)) {
-            mailViewers.remove(player);
+        if (mailViewers.contains(player.getUniqueId())) {
+            mailViewers.remove(player.getUniqueId());
             ItemStack book = inventory.getItem(4);
 
             if (book == null)

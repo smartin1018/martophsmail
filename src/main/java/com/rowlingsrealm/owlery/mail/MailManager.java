@@ -25,12 +25,9 @@ public class MailManager extends SimpleListener {
     private HashMap<UUID, List<MailItem>> messages = new HashMap<>();
     private ArrayList<MailCreator> creators = new ArrayList<>();
 
+
     public MailManager(JavaPlugin plugin) {
         super(plugin, "Mail Manager");
-    }
-
-    public List<MailItem> getMessages(UUID uuid) {
-        return messages.get(uuid);
     }
 
     public HashMap<UUID, List<MailItem>> getMessageMap() {

@@ -84,22 +84,22 @@ public class MailItem {
 
             switch (key) {
                 case "sender":
-                    this.sender = UUID.fromString(value);
+                    sender = UUID.fromString(value);
                     break;
                 case "message":
-                    this.message = value;
+                    message = value;
                     break;
                 case "time-sent":
-                    this.timeSentMillis = Long.parseLong(value);
+                    timeSentMillis = Long.parseLong(value);
                     break;
                 case "items":
-                    this.itemStacks = getItemsFromJSON(value);
+                    itemStacks = getItemsFromJSON(value);
                     break;
                 case "read":
-                    this.read = Boolean.parseBoolean(value);
+                    read = Boolean.parseBoolean(value);
                     break;
                 case "hex":
-                    this.hex = value;
+                    hex = value;
                     break;
             }
 
@@ -107,7 +107,7 @@ public class MailItem {
 
     }
 
-    public String getJson() {
+    public String getJSONString() {
         HashMap<String, String> mailMap = new HashMap<String, String>() {{
             put("sender", getSender().toString());
             put("message", getMessage());
@@ -181,15 +181,15 @@ public class MailItem {
         return receiver;
     }
 
-    void setReceiver(UUID receiver) {
+    private void setReceiver(UUID receiver) {
         this.receiver = receiver;
     }
 
-    void setSender(UUID sender) {
+    private void setSender(UUID sender) {
         this.sender = sender;
     }
 
-    public boolean wasRead() {
+    private boolean wasRead() {
         return read;
     }
 
@@ -197,7 +197,7 @@ public class MailItem {
         this.read = read;
     }
 
-    public long getTimeSentMillis() {
+    private long getTimeSentMillis() {
         return timeSentMillis;
     }
 
@@ -213,7 +213,7 @@ public class MailItem {
         return message;
     }
 
-    public List<ItemStack> getItemStacks() {
+    private List<ItemStack> getItemStacks() {
         return itemStacks;
     }
 

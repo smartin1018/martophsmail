@@ -20,7 +20,7 @@ public class CentralManager extends SimpleListener {
     private InventoryListener inventoryListener;
     private File mailFile;
 
-    public CentralManager(JavaPlugin plugin) {
+    CentralManager(JavaPlugin plugin) {
         super(plugin, "Central Manager");
 
         mailManager = new MailManager(plugin);
@@ -50,7 +50,7 @@ public class CentralManager extends SimpleListener {
         mailManager.getMessageMap().forEach((key, value) -> {
             List<String> strings = new ArrayList<>();
 
-            value.forEach(mailItem -> strings.add(mailItem.getJson()));
+            value.forEach(mailItem -> strings.add(mailItem.getJSONString()));
 
             if (strings.isEmpty())
                 return;

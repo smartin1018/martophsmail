@@ -16,7 +16,7 @@ public class SimpleListener implements Listener {
         Bukkit.getPluginManager().registerEvents(listener, this.plugin);
     }
 
-    public final JavaPlugin getPlugin() {
+    protected final JavaPlugin getPlugin() {
         return this.plugin;
     }
 

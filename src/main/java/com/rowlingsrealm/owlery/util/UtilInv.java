@@ -1,5 +1,6 @@
 package com.rowlingsrealm.owlery.util;
 
+import com.rowlingsrealm.owlery.Owlery;
 import com.rowlingsrealm.owlery.mail.MailItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class UtilInv {
 
     public static Inventory surroundInventory(Inventory inventory, ItemStack itemStack) {
@@ -88,7 +90,7 @@ public class UtilInv {
 
         HashMap<String, Object> jsonMap = new HashMap<>();
 
-        itemStack.serialize().entrySet().forEach(entry -> jsonMap.put(entry.getKey(), entry.getValue()));
+        itemStack.serialize().forEach(jsonMap::put);
 
         if (jsonMap.containsKey("meta")) {
 
@@ -103,7 +105,6 @@ public class UtilInv {
         return new JSONObject(jsonMap).toJSONString().replace("\\", "\\\\");
     }
 
-    @SuppressWarnings("unchecked")
     public static ItemStack getItemFromJsonString(String json) throws ParseException {
 
         if (json.isEmpty())
@@ -143,13 +144,12 @@ public class UtilInv {
         return ItemStack.deserialize(jsonMap);
     }
 
-
-    public static ItemMeta deserializeItemMeta(Map<String, Object> map) {
+    private static ItemMeta deserializeItemMeta(Map<String, Object> map) {
 
         ItemMeta meta = null;
 
         try {
-            Class[] craftMetaItemClasses = Class.forName("org.bukkit.craftbukkit.v1_12_R1.inventory.CraftMetaItem").getDeclaredClasses();
+            Class[] craftMetaItemClasses = Class.forName("org.bukkit.craftbukkit." + Owlery.getVersion() + "inventory.CraftMetaItem").getDeclaredClasses();
 
             for (Class craftMetaItemClass : craftMetaItemClasses) {
                 if (!craftMetaItemClass.getSimpleName().equals("SerializableMeta"))

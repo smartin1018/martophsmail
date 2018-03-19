@@ -7,6 +7,7 @@ import com.rowlingsrealm.owlery.npc.TraitOwlery;
 import com.rowlingsrealm.owlery.util.UtilInv;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
@@ -65,10 +66,17 @@ public class Owlery extends JavaPlugin {
     }
 
 
+    public static String getVersion() {
+        String name = Bukkit.getServer().getClass().getPackage().getName();
+        return name.substring(name.lastIndexOf('.') + 1) + ".";
+    }
+
     @SuppressWarnings("Duplicates")
     public void onDisable() {
 
-        getCentralManager().getInventoryListener().getItemSenders().forEach(player -> {
+        getCentralManager().getInventoryListener().getItemSenders().forEach(uuid -> {
+
+            Player player = Bukkit.getPlayer(uuid);
 
             Inventory inventory = player.getOpenInventory().getTopInventory();
 
@@ -83,7 +91,9 @@ public class Owlery extends JavaPlugin {
             player.closeInventory();
         });
 
-        getCentralManager().getInventoryListener().getMailViewers().forEach(player -> {
+        getCentralManager().getInventoryListener().getMailViewers().forEach(uuid -> {
+
+            Player player = Bukkit.getPlayer(uuid);
 
             Inventory inventory = player.getOpenInventory().getTopInventory();
             ItemStack book = inventory.getItem(4);
@@ -111,10 +121,14 @@ public class Owlery extends JavaPlugin {
 
         });
 
-        getCentralManager().getInventoryListener().getInboxViewers().keySet().forEach(Player::closeInventory);
+        getCentralManager().getInventoryListener().getInboxViewers().keySet().forEach(uuid -> {
+            Player player = Bukkit.getPlayer(uuid);
+            player.closeInventory();
+        });
 
         getCentralManager().saveMail();
 
         server.getPluginManager().removePermission("owlery.sendtoself");
     }
+
 }

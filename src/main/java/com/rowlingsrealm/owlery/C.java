@@ -2,6 +2,7 @@ package com.rowlingsrealm.owlery;
 
 import java.util.regex.Pattern;
 
+@SuppressWarnings("ALL")
 public class C {
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + String.valueOf('§') + "[0-9A-FK-OR]");
     public static String Aqua = "§b";

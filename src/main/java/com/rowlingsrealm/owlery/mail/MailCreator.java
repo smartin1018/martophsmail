@@ -8,7 +8,6 @@ import java.util.UUID;
 
 public class MailCreator {
 
-    private boolean done = false;
     private UUID sender;
     private UUID receiver;
     private List<String> messages = new ArrayList<>();
@@ -16,11 +15,11 @@ public class MailCreator {
     public MailCreator() {
     }
 
-    public MailCreator(MailItem mailItem) {
+    MailCreator(MailItem mailItem) {
         this(mailItem.getSender(), mailItem.getReceiver());
     }
 
-    public MailCreator(UUID sender, UUID receiver) {
+    private MailCreator(UUID sender, UUID receiver) {
         this.sender = sender;
         this.receiver = receiver;
         Owlery.getCentralManager().getMailManager().getCreators().add(this);
@@ -33,10 +32,6 @@ public class MailCreator {
         }
 
         return null;
-    }
-
-    public boolean isDone() {
-        return done;
     }
 
     public UUID getSender() {
