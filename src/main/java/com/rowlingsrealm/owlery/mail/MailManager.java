@@ -1,5 +1,7 @@
 package com.rowlingsrealm.owlery.mail;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.rowlingsrealm.owlery.C;
 import com.rowlingsrealm.owlery.Lang;
 import com.rowlingsrealm.owlery.Owlery;
@@ -11,18 +13,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 public class MailManager extends SimpleListener {
 
-    private HashMap<UUID, List<MailItem>> messages = new HashMap<>();
+    private Multimap<UUID, MailItem> messages = ArrayListMultimap.create();
     private ArrayList<MailCreator> creators = new ArrayList<>();
 
 
@@ -30,13 +32,11 @@ public class MailManager extends SimpleListener {
         super(plugin, "Mail Manager");
     }
 
-    public HashMap<UUID, List<MailItem>> getMessageMap() {
+    public Multimap<UUID, MailItem> getMessageMap() {
         return messages;
     }
 
     public void addMessage(UUID uuid, MailItem mailItem) {
-        messages.computeIfAbsent(uuid, k -> new ArrayList<>());
-
         messages.get(uuid).add(mailItem);
     }
 
@@ -45,13 +45,13 @@ public class MailManager extends SimpleListener {
         Inventory inventory = UtilInv.surroundInventory(Bukkit.createInventory(null, 27, Lang.getProperty("mail-menu-inv")), new ItemStack(Material.STAINED_GLASS_PANE));
         inventory.setItem(19, UtilInv.createItem(Material.EMERALD, C.Green + "Compose", new String[]{C.Gray + "Click me to compose a message."}, 1));
 
-        List<MailItem> messages = this.messages.get(player.getUniqueId());
+        List<MailItem> messages = new ArrayList<>(this.messages.get(player.getUniqueId()));
 
         for (int i = 1; i < 8; i++) {
             inventory.setItem(i, new ItemStack(Material.AIR));
         }
 
-        if (messages == null || messages.isEmpty()) {
+        if (messages.isEmpty()) {
             player.openInventory(inventory);
             Owlery.getCentralManager().getInventoryListener().addMailViewer(player, 0);
             return;
@@ -92,6 +92,19 @@ public class MailManager extends SimpleListener {
 
         player.sendMessage(Lang.getProperty("message-entered", "{MESSAGE}", message));
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void quitEvent(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        MailCreator mailCreator = new MailCreator().parse(uuid);
+
+        if (mailCreator == null)
+            return;
+
+        creators.remove(mailCreator);
+
     }
 
     public ArrayList<MailCreator> getCreators() {

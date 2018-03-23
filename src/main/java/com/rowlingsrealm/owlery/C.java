@@ -34,7 +34,6 @@ public class C {
             return null;
         }
 
-
         return STRIP_COLOR_PATTERN.matcher(string).replaceAll("");
     }
 

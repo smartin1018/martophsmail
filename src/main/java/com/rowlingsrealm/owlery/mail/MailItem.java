@@ -1,5 +1,6 @@
 package com.rowlingsrealm.owlery.mail;
 
+import com.google.common.collect.Multimap;
 import com.rowlingsrealm.owlery.C;
 import com.rowlingsrealm.owlery.Lang;
 import com.rowlingsrealm.owlery.Owlery;
@@ -131,10 +132,9 @@ public class MailItem {
     }
 
     public MailItem parse(String hex) {
-        HashMap<UUID, List<MailItem>> messageMap = Owlery.getCentralManager().getMailManager().getMessageMap();
-        List<MailItem> messages = new ArrayList<>();
+        Multimap<UUID, MailItem> messageMap = Owlery.getCentralManager().getMailManager().getMessageMap();
 
-        messageMap.values().forEach(messages::addAll);
+        List<MailItem> messages = new ArrayList<>(messageMap.values());
 
         for (MailItem mailItem : messages) {
             if (mailItem.getHex().equals(hex))

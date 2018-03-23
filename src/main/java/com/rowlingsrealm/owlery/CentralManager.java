@@ -47,7 +47,7 @@ public class CentralManager extends SimpleListener {
 
         HashMap<UUID, List<String>> map = new HashMap<>();
 
-        mailManager.getMessageMap().forEach((key, value) -> {
+        mailManager.getMessageMap().asMap().forEach((key, value) -> {
             List<String> strings = new ArrayList<>();
 
             value.forEach(mailItem -> strings.add(mailItem.getJSONString()));
@@ -99,14 +99,13 @@ public class CentralManager extends SimpleListener {
             while (keysItr.hasNext()) {
 
                 String key = keysItr.next();
-                List<MailItem> mailItems = new ArrayList<>();
+                UUID uuid = UUID.fromString(key);
 
                 for (String string : (List<String>) jsonObject.get(key)) {
                     MailItem mailItem = new MailItem(string, UUID.fromString(key));
-                    mailItems.add(mailItem);
+                    getMailManager().getMessageMap().get(uuid).add(mailItem);
                 }
 
-                getMailManager().getMessageMap().put(UUID.fromString(key), mailItems);
             }
 
         } catch (ParseException ignored) {

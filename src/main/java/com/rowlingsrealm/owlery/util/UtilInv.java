@@ -113,8 +113,10 @@ public class UtilInv {
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = (JSONObject) jsonParser.parse(json);
 
-        HashMap<String, Object> jsonMap = new HashMap<>();
+        if (jsonObject == null)
+            return null;
 
+        HashMap<String, Object> jsonMap = new HashMap<>();
         Iterator<String> keysItr = (Iterator<String>) jsonObject.keySet().iterator();
         while (keysItr.hasNext()) {
             String key = keysItr.next();
