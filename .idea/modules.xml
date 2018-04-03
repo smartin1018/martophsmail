@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Owlery.iml" filepath="$PROJECT_DIR$/Owlery.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MartophsMail.iml" filepath="$PROJECT_DIR$/MartophsMail.iml" />
+      <module fileurl="file://$PROJECT_DIR$/martophsmail.iml" filepath="$PROJECT_DIR$/martophsmail.iml" />
     </modules>
   </component>
 </project>

@@ -1,9 +1,10 @@
-main: com.rowlingsrealm.owlery.Owlery
-name: Owlery
-version: 1.0-SNAPSHOT
+main: com.martoph.mail.MartophsMail
+name: ${name}
+version: ${version}
 author: Martoph
-description: Mail delivery for Rowling's Realm
-depend: [Citizens]
+description: Mail delivery system.
 commands:
   endmessage:
-    description: "Ends an Owlery message"
+    description: "Ends an Martoph's Mail message"
+  mmail:
+    description: "Starts a Martoph's Mail message"

@@ -1,4 +1,4 @@
-package com.rowlingsrealm.owlery.util;
+package com.martoph.mail.util;
 
 import org.apache.commons.lang.ArrayUtils;
 

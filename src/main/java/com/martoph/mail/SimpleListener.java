@@ -1,4 +1,4 @@
-package com.rowlingsrealm.owlery;
+package com.martoph.mail;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;

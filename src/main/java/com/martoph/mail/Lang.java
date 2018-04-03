@@ -1,4 +1,6 @@
-package com.rowlingsrealm.owlery;
+package com.martoph.mail;
+
+import org.bukkit.ChatColor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +14,7 @@ public class Lang {
     }
 
     public static void setProperty(String key, String property) {
-        properties.put(key, property.replace("&", "§"));
+        properties.put(key, ChatColor.translateAlternateColorCodes('&', property));
     }
 
     public static Map<String, String> getDefaults() {
@@ -35,6 +37,7 @@ public class Lang {
             put("no-message-to-end", C.DRed + "No message to end!");
             put("mail-received", C.Green + "Mail received from {PLAYER}!");
             put("same-player", C.DRed + "Cannot send to yourself!");
+            put("no-perms", C.DRed + "Insufficient permission.");
         }};
     }
 

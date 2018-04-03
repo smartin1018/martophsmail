@@ -1,6 +1,6 @@
-package com.rowlingsrealm.owlery.mail;
+package com.martoph.mail.mail;
 
-import com.rowlingsrealm.owlery.Owlery;
+import com.martoph.mail.MartophsMail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +22,11 @@ public class MailCreator {
     private MailCreator(UUID sender, UUID receiver) {
         this.sender = sender;
         this.receiver = receiver;
-        Owlery.getCentralManager().getMailManager().getCreators().add(this);
+        MartophsMail.getCentralManager().getMailManager().getCreators().add(this);
     }
 
     public MailCreator parse(UUID uuid) {
-        for (MailCreator creator : Owlery.getCentralManager().getMailManager().getCreators()) {
+        for (MailCreator creator : MartophsMail.getCentralManager().getMailManager().getCreators()) {
             if (creator.getSender().equals(uuid))
                 return creator;
         }

@@ -1,10 +1,11 @@
-package com.rowlingsrealm.owlery;
+package com.martoph.mail;
 
-import com.rowlingsrealm.owlery.command.CommandEndMessage;
-import com.rowlingsrealm.owlery.mail.MailCreator;
-import com.rowlingsrealm.owlery.mail.MailItem;
-import com.rowlingsrealm.owlery.npc.TraitOwlery;
-import com.rowlingsrealm.owlery.util.UtilInv;
+import com.martoph.mail.command.CommandEndMessage;
+import com.martoph.mail.command.CommandMail;
+import com.martoph.mail.mail.MailCreator;
+import com.martoph.mail.mail.MailItem;
+import com.martoph.mail.npc.TraitMailer;
+import com.martoph.mail.util.UtilInv;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.Bukkit;
@@ -24,11 +25,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Owlery extends JavaPlugin {
+public class MartophsMail extends JavaPlugin {
 
     private static JavaPlugin plugin;
     private static Server server;
     private static CentralManager centralManager;
+
+    private static Permission mailSelfPermission = new Permission("mmail.sendtoself");
+    private static Permission mailPermission = new Permission("mmail.mail");
 
     public static void sendMessage(Object message) {
         ConsoleCommandSender console = server.getConsoleSender();
@@ -44,6 +48,20 @@ public class Owlery extends JavaPlugin {
         return plugin;
     }
 
+    public static Permission getMailSelfPermission() {
+        return mailSelfPermission;
+    }
+
+
+    public static String getVersion() {
+        String name = Bukkit.getServer().getClass().getPackage().getName();
+        return name.substring(name.lastIndexOf('.') + 1) + ".";
+    }
+
+    public static Permission getMailPermission() {
+        return mailPermission;
+    }
+
     public void onEnable() {
 
         plugin = this;
@@ -52,23 +70,18 @@ public class Owlery extends JavaPlugin {
 
         PluginManager pluginManager = server.getPluginManager();
         Plugin citizensPlugin = pluginManager.getPlugin("Citizens");
-        if (citizensPlugin == null || !citizensPlugin.isEnabled()) {
-            sendMessage(C.DRed + "CITIZENS IS NOT ENABLED - DISABLING");
-            pluginManager.disablePlugin(this);
+        if (citizensPlugin != null && citizensPlugin.isEnabled()) {
+            sendMessage("Citizens support enabled!");
+            CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(TraitMailer.class).withName("Mailer"));
         }
 
-        CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(TraitOwlery.class).withName("Owlery"));
 
         getCommand("endmessage").setExecutor(new CommandEndMessage());
+        getCommand("mmail").setExecutor(new CommandMail());
 
-        pluginManager.addPermission(new Permission("owlery.sendtoself"));
+        pluginManager.addPermission(new Permission("mmail.sendtoself"));
+        pluginManager.addPermission(new Permission("mmail.mail"));
 
-    }
-
-
-    public static String getVersion() {
-        String name = Bukkit.getServer().getClass().getPackage().getName();
-        return name.substring(name.lastIndexOf('.') + 1) + ".";
     }
 
     @SuppressWarnings("Duplicates")
@@ -85,7 +98,7 @@ public class Owlery extends JavaPlugin {
             items.removeIf(Objects::isNull);
             items.forEach(itemStack -> UtilInv.attemptAddToInv(itemStack, player));
 
-            Owlery.getCentralManager().getMailManager().getCreators().remove(new MailCreator().parse(player.getUniqueId()));
+            MartophsMail.getCentralManager().getMailManager().getCreators().remove(new MailCreator().parse(player.getUniqueId()));
             player.sendMessage(Lang.getProperty("cancelled-delivery"));
 
             player.closeInventory();
@@ -128,7 +141,7 @@ public class Owlery extends JavaPlugin {
 
         getCentralManager().saveMail();
 
-        server.getPluginManager().removePermission("owlery.sendtoself");
+        server.getPluginManager().removePermission(mailPermission);
+        server.getPluginManager().removePermission(mailSelfPermission);
     }
-
 }

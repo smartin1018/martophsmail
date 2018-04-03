@@ -1,7 +1,7 @@
-package com.rowlingsrealm.owlery.util;
+package com.martoph.mail.util;
 
-import com.rowlingsrealm.owlery.Owlery;
-import com.rowlingsrealm.owlery.mail.MailItem;
+import com.martoph.mail.MartophsMail;
+import com.martoph.mail.mail.MailItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -151,7 +151,7 @@ public class UtilInv {
         ItemMeta meta = null;
 
         try {
-            Class[] craftMetaItemClasses = Class.forName("org.bukkit.craftbukkit." + Owlery.getVersion() + "inventory.CraftMetaItem").getDeclaredClasses();
+            Class[] craftMetaItemClasses = Class.forName("org.bukkit.craftbukkit." + MartophsMail.getVersion() + "inventory.CraftMetaItem").getDeclaredClasses();
 
             for (Class craftMetaItemClass : craftMetaItemClasses) {
                 if (!craftMetaItemClass.getSimpleName().equals("SerializableMeta"))

@@ -1,18 +1,17 @@
-package com.rowlingsrealm.owlery.listener;
+package com.martoph.mail.listener;
 
-import com.rowlingsrealm.owlery.C;
-import com.rowlingsrealm.owlery.Lang;
-import com.rowlingsrealm.owlery.Owlery;
-import com.rowlingsrealm.owlery.SimpleListener;
-import com.rowlingsrealm.owlery.mail.MailCreator;
-import com.rowlingsrealm.owlery.mail.MailItem;
-import com.rowlingsrealm.owlery.util.UtilInv;
+import com.martoph.mail.C;
+import com.martoph.mail.Lang;
+import com.martoph.mail.MartophsMail;
+import com.martoph.mail.SimpleListener;
+import com.martoph.mail.mail.MailCreator;
+import com.martoph.mail.mail.MailItem;
+import com.martoph.mail.util.UtilInv;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -108,7 +107,7 @@ public class InventoryListener extends SimpleListener {
                 if (event.getClick() == ClickType.RIGHT) {
 
                     if (sureToDelete.contains(mailItem)) {
-                        Owlery.getCentralManager().getMailManager().getMessageMap().get(player.getUniqueId()).remove(mailItem);
+                        MartophsMail.getCentralManager().getMailManager().getMessageMap().get(player.getUniqueId()).remove(mailItem);
                         event.getClickedInventory().remove(clicked);
                         player.sendMessage(Lang.getProperty("deleted"));
                         return;
@@ -127,13 +126,13 @@ public class InventoryListener extends SimpleListener {
 
             if (clicked.getType() == Material.SIGN) {
                 if (clicked.getItemMeta().getDisplayName().equals(C.Green + "Previous Page")) {
-                    Owlery.getCentralManager().getMailManager().openOwlery(player, inboxViewers.get(player.getUniqueId()) - 1);
-                    Owlery.sendMessage(inboxViewers.get(player.getUniqueId()));
+                    MartophsMail.getCentralManager().getMailManager().openOwlery(player, inboxViewers.get(player.getUniqueId()) - 1);
+                    MartophsMail.sendMessage(inboxViewers.get(player.getUniqueId()));
                 }
 
                 if (clicked.getItemMeta().getDisplayName().equals(C.Green + "Next Page")) {
-                    Owlery.getCentralManager().getMailManager().openOwlery(player, inboxViewers.get(player.getUniqueId()) + 1);
-                    Owlery.sendMessage(inboxViewers.get(player.getUniqueId()));
+                    MartophsMail.getCentralManager().getMailManager().openOwlery(player, inboxViewers.get(player.getUniqueId()) + 1);
+                    MartophsMail.sendMessage(inboxViewers.get(player.getUniqueId()));
                 }
             }
         }
@@ -148,7 +147,7 @@ public class InventoryListener extends SimpleListener {
                 new MailItem(mailCreator.getSender(), mailCreator.getReceiver(), mailCreator.getMessageStreamline(), items);
 
                 itemSenders.remove(player.getUniqueId());
-                Owlery.getCentralManager().getMailManager().getCreators().remove(mailCreator);
+                MartophsMail.getCentralManager().getMailManager().getCreators().remove(mailCreator);
                 Bukkit.getScheduler().runTaskLater(getPlugin(), player::closeInventory, 1);
                 player.sendMessage(Lang.getProperty("mail-sent"));
                 Bukkit.getPlayer(mailCreator.getReceiver()).sendMessage(Lang.getProperty("mail-received", "{PLAYER}", player.getName()));
@@ -237,28 +236,13 @@ public class InventoryListener extends SimpleListener {
         }
     }
 
-    @EventHandler
-    public void onDrop(PlayerDropItemEvent event) {
-
-        ItemStack item = event.getItemDrop().getItemStack();
-
-        if (item.getType() == Material.WRITTEN_BOOK) {
-            BookMeta bookMeta = (BookMeta) item.getItemMeta();
-            MailItem mailItem = new MailItem().parse(bookMeta.getAuthor());
-
-            if (mailItem != null)
-                event.setCancelled(true);
-        }
-    }
-
     @SuppressWarnings("Duplicates")
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
         Inventory inventory = event.getInventory();
 
-        if (inboxViewers.containsKey(player.getUniqueId()))
-            inboxViewers.remove(player.getUniqueId());
+        inboxViewers.remove(player.getUniqueId());
 
         if (itemSenders.contains(player.getUniqueId())) {
 
@@ -267,7 +251,7 @@ public class InventoryListener extends SimpleListener {
             items.removeIf(Objects::isNull);
             items.forEach(itemStack -> UtilInv.attemptAddToInv(itemStack, player));
 
-            Owlery.getCentralManager().getMailManager().getCreators().remove(new MailCreator().parse(player.getUniqueId()));
+            MartophsMail.getCentralManager().getMailManager().getCreators().remove(new MailCreator().parse(player.getUniqueId()));
             itemSenders.remove(player.getUniqueId());
             player.sendMessage(Lang.getProperty("cancelled-delivery"));
         }

@@ -1,10 +1,10 @@
-package com.rowlingsrealm.owlery.command;
+package com.martoph.mail.command;
 
-import com.rowlingsrealm.owlery.C;
-import com.rowlingsrealm.owlery.Lang;
-import com.rowlingsrealm.owlery.Owlery;
-import com.rowlingsrealm.owlery.mail.MailCreator;
-import com.rowlingsrealm.owlery.util.UtilInv;
+import com.martoph.mail.C;
+import com.martoph.mail.Lang;
+import com.martoph.mail.MartophsMail;
+import com.martoph.mail.mail.MailCreator;
+import com.martoph.mail.util.UtilInv;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -44,8 +44,8 @@ public class CommandEndMessage implements CommandExecutor {
 
         player.openInventory(inventory);
 
-        Owlery.getCentralManager().getInventoryListener().getItemSenders().add(player.getUniqueId());
-        Owlery.getCentralManager().getInventoryListener().getMailViewers().add(player.getUniqueId());
+        MartophsMail.getCentralManager().getInventoryListener().getItemSenders().add(player.getUniqueId());
+        MartophsMail.getCentralManager().getInventoryListener().getMailViewers().add(player.getUniqueId());
         return true;
     }
 }

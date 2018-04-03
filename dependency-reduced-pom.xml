@@ -2,16 +2,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.rowlingsrealm</groupId>
-  <artifactId>owlery</artifactId>
-  <version>1.0-SNAPSHOT</version>
+    <artifactId>martophsmail</artifactId>
+    <name>MartophsMail</name>
+    <version>1.0.3-SNAPSHOT</version>
   <build>
+      <resources>
+          <resource>
+              <filtering>true</filtering>
+              <directory>src/main/resources</directory>
+          </resource>
+      </resources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
+          <version>3.7.0</version>
+          <dependencies>
+              <dependency>
+                  <groupId>org.ow2.asm</groupId>
+                  <artifactId>asm</artifactId>
+                  <version>6.1</version>
+              </dependency>
+          </dependencies>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+            <release>10</release>
         </configuration>
       </plugin>
       <plugin>
@@ -58,16 +71,40 @@
     </dependency>
     <dependency>
       <groupId>org.spigotmc</groupId>
-      <artifactId>spigot</artifactId>
+        <artifactId>spigot-api</artifactId>
       <version>1.12.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
+        <exclusions>
+            <exclusion>
+                <artifactId>commons-lang</artifactId>
+                <groupId>commons-lang</groupId>
+            </exclusion>
+            <exclusion>
+                <artifactId>json-simple</artifactId>
+                <groupId>com.googlecode.json-simple</groupId>
+            </exclusion>
+            <exclusion>
+                <artifactId>guava</artifactId>
+                <groupId>com.google.guava</groupId>
+            </exclusion>
+            <exclusion>
+                <artifactId>gson</artifactId>
+                <groupId>com.google.code.gson</groupId>
+            </exclusion>
+            <exclusion>
+                <artifactId>snakeyaml</artifactId>
+                <groupId>org.yaml</groupId>
+            </exclusion>
+            <exclusion>
+                <artifactId>bungeecord-chat</artifactId>
+                <groupId>net.md-5</groupId>
+            </exclusion>
+        </exclusions>
     </dependency>
   </dependencies>
   <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <defaultGoal>clean install</defaultGoal>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.9</maven.compiler.source>
-    <maven.compiler.target>1.9</maven.compiler.target>
   </properties>
 </project>
 

@@ -1,14 +1,14 @@
-package com.rowlingsrealm.owlery.npc;
+package com.martoph.mail.npc;
 
-import com.rowlingsrealm.owlery.Owlery;
+import com.martoph.mail.MartophsMail;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import org.bukkit.event.EventHandler;
 
-public class TraitOwlery extends Trait {
+public class TraitMailer extends Trait {
 
-    public TraitOwlery() {
-        super("Owlery");
+    public TraitMailer() {
+        super("Mailer");
     }
 
     @EventHandler
@@ -17,11 +17,11 @@ public class TraitOwlery extends Trait {
         if (!event.getNPC().hasTrait(this.getClass()))
             return;
 
-        Owlery.getCentralManager().getMailManager().openOwlery(event.getClicker(), 0);
+        MartophsMail.getCentralManager().getMailManager().openOwlery(event.getClicker(), 0);
     }
 
     @Override
     public void onAttach() {
-        Owlery.sendMessage(npc.getName() + " was assigned as an Owlery");
+        MartophsMail.sendMessage(npc.getName() + " was assigned as a Mail NPC");
     }
 }

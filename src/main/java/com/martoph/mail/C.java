@@ -1,4 +1,4 @@
-package com.rowlingsrealm.owlery;
+package com.martoph.mail;
 
 import java.util.regex.Pattern;
 

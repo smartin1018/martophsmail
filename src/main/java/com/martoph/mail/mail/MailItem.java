@@ -1,11 +1,11 @@
-package com.rowlingsrealm.owlery.mail;
+package com.martoph.mail.mail;
 
 import com.google.common.collect.Multimap;
-import com.rowlingsrealm.owlery.C;
-import com.rowlingsrealm.owlery.Lang;
-import com.rowlingsrealm.owlery.Owlery;
-import com.rowlingsrealm.owlery.util.UtilInv;
-import com.rowlingsrealm.owlery.util.UtilString;
+import com.martoph.mail.C;
+import com.martoph.mail.Lang;
+import com.martoph.mail.MartophsMail;
+import com.martoph.mail.util.UtilInv;
+import com.martoph.mail.util.UtilString;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -37,10 +37,10 @@ public class MailItem {
 
         setSender(sender);
 
-        new AnvilGUI(Owlery.getPlugin(), Bukkit.getPlayer(sender), C.Gray + "Player name...", (player, reply) -> {
+        new AnvilGUI(MartophsMail.getPlugin(), Bukkit.getPlayer(sender), C.Gray + "Player name...", (player, reply) -> {
             Player player1 = Bukkit.getPlayer(reply);
 
-            if (reply.equals(player.getDisplayName()) && !player.hasPermission("owlery.sendtoself")) {
+            if (reply.equals(player.getDisplayName()) && !player.hasPermission(MartophsMail.getMailSelfPermission())) {
                 player.closeInventory();
                 player.sendMessage(Lang.getProperty("same-player"));
                 return "Same player";
@@ -70,7 +70,7 @@ public class MailItem {
         this.message = message;
         this.itemStacks = itemStacks;
 
-        Owlery.getCentralManager().getMailManager().addMessage(receiver, this);
+        MartophsMail.getCentralManager().getMailManager().addMessage(receiver, this);
     }
 
     @SuppressWarnings("unchecked")
@@ -132,7 +132,7 @@ public class MailItem {
     }
 
     public MailItem parse(String hex) {
-        Multimap<UUID, MailItem> messageMap = Owlery.getCentralManager().getMailManager().getMessageMap();
+        Multimap<UUID, MailItem> messageMap = MartophsMail.getCentralManager().getMailManager().getMessageMap();
 
         List<MailItem> messages = new ArrayList<>(messageMap.values());
 

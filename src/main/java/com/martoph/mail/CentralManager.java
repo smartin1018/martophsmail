@@ -1,8 +1,8 @@
-package com.rowlingsrealm.owlery;
+package com.martoph.mail;
 
-import com.rowlingsrealm.owlery.listener.InventoryListener;
-import com.rowlingsrealm.owlery.mail.MailItem;
-import com.rowlingsrealm.owlery.mail.MailManager;
+import com.martoph.mail.listener.InventoryListener;
+import com.martoph.mail.mail.MailItem;
+import com.martoph.mail.mail.MailManager;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONObject;
@@ -29,15 +29,28 @@ public class CentralManager extends SimpleListener {
         this.plugin = plugin;
         mailFile = new File(getPlugin().getDataFolder(), "mail.json");
 
+        initFolder();
         initMail();
         initLang();
+    }
+
+    private void initFolder() {
+        File folder = new File(plugin.getDataFolder() + "/");
+
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
     }
 
     private void initMail() {
         File mailFile = new File(getPlugin().getDataFolder(), "mail.json");
 
-        if (!mailFile.exists()) {
-            plugin.saveResource("mail.json", false);
+        try {
+            boolean created = mailFile.createNewFile();
+            if (created)
+                MartophsMail.sendMessage("Created mail file.");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         readMail();
@@ -116,8 +129,12 @@ public class CentralManager extends SimpleListener {
     private void initLang() {
         File lang = new File(getPlugin().getDataFolder(), "en_US.lang");
 
-        if (!lang.exists()) {
-            plugin.saveResource("en_US.lang", false);
+        try {
+            boolean created = lang.createNewFile();
+            if (created)
+                MartophsMail.sendMessage("Created lang file.");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         Properties properties = new Properties();

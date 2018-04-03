@@ -6,11 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Owlery" />
+        <module name="martophsmail" />
+        <module name="MartophsMail" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Owlery" target="1.8" />
+      <module name="MartophsMail" target="1.5" />
+      <module name="martophsmail" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
